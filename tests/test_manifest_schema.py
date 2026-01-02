@@ -128,3 +128,18 @@ class TestManifestValidation:
         # stdio is default, so this should work
         manifest = Manifest.model_validate(data)
         assert manifest.mcp.servers["invalid"].transport == "stdio"
+
+    def test_mcp_stdio_command_requires_at_least_one_element(self) -> None:
+        """STDIO MCP server command must have at least one element."""
+        data = {
+            "version": "1",
+            "project": {"name": "test", "description": "test"},
+            "mcp": {
+                "servers": {
+                    "empty": {"transport": "stdio", "command": []},
+                },
+            },
+        }
+        with pytest.raises(ValidationError) as exc_info:
+            Manifest.model_validate(data)
+        assert "command" in str(exc_info.value).lower()

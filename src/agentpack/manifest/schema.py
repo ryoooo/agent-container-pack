@@ -50,7 +50,7 @@ class MCPServerStdio(BaseModel):
     """STDIO MCP server configuration."""
 
     transport: Literal["stdio"] = "stdio"
-    command: list[str]
+    command: list[str] = Field(min_length=1)
     env: dict[str, str] = Field(default_factory=dict)
     cwd: str | None = None
 
