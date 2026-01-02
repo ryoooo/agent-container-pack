@@ -73,3 +73,29 @@ class TestDownloadTemplate:
 
             assert (tmp_path / ".devcontainer" / "devcontainer.json").exists()
             assert (tmp_path / ".devcontainer" / "Dockerfile").exists()
+
+
+class TestGenerateSkeleton:
+    """Test skeleton generation."""
+
+    def test_generate_skeleton_basic(self, tmp_path: Path) -> None:
+        """Generate basic skeleton without stack."""
+        from agentpack.init.template import generate_skeleton
+
+        generate_skeleton(tmp_path)
+
+        assert (tmp_path / "agentpack.yml").exists()
+        content = (tmp_path / "agentpack.yml").read_text()
+        assert 'version: "1"' in content
+        assert "my-project" in content
+
+    def test_generate_skeleton_with_stack(self, tmp_path: Path) -> None:
+        """Generate skeleton with specific stack."""
+        from agentpack.init.template import generate_skeleton
+
+        generate_skeleton(tmp_path, stack="python")
+
+        content = (tmp_path / "agentpack.yml").read_text()
+        assert "stack: python" in content
+        assert "stacks:" in content
+        assert "python:" in content
