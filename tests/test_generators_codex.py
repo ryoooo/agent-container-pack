@@ -69,3 +69,26 @@ class TestCodexConfigGenerator:
         assert r'\"quotes\"' in result
         # Backslashes should be escaped
         assert r"\\" in result
+
+    def test_http_server_env_output(self) -> None:
+        """HTTP servers output env variables."""
+        from agentpack.manifest.schema import Manifest
+
+        manifest = Manifest.model_validate(
+            {
+                "version": "1",
+                "project": {"name": "test", "description": "test"},
+                "mcp": {
+                    "servers": {
+                        "api": {
+                            "transport": "http",
+                            "url": "https://api.example.com/mcp",
+                            "env": {"API_KEY": "${env:SECRET}"},
+                        },
+                    },
+                },
+            }
+        )
+        result = generate_codex_config(manifest)
+        assert "API_KEY" in result
+        assert "${env:SECRET}" in result or r"\${env:SECRET}" in result

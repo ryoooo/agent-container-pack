@@ -48,6 +48,8 @@ def generate_codex_config(manifest: Manifest) -> str:
                 lines.append(f'cwd = "{_escape_toml_string(server.cwd)}"')
         elif isinstance(server, MCPServerHTTP):
             lines.append(f'url = "{_escape_toml_string(server.url)}"')
+            if server.env:
+                lines.append(f"env = {_format_toml_value(server.env)}")
 
         lines.append("")
 

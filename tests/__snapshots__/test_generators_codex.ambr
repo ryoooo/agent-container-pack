@@ -11,6 +11,7 @@
   
   [mcp_servers.external-api]
   url = "https://api.example.com/mcp"
+  env = { "API_KEY" = "${env:EXAMPLE_API_KEY}" }
   
   '''
 # ---
