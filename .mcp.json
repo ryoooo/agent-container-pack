@@ -1,5 +1,5 @@
 {
-  "servers": {
+  "mcpServers": {
     "Ref": {
       "type": "http",
       "url": "https://api.ref.tools/mcp",
