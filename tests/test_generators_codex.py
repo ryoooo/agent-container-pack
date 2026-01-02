@@ -44,3 +44,28 @@ class TestCodexConfigGenerator:
         result = generate_codex_config(manifest)
         assert "[mcp_servers.external-api]" in result
         assert 'url = "https://api.example.com/mcp"' in result
+
+    def test_escapes_special_characters(self) -> None:
+        """TOML strings with quotes/backslashes are properly escaped."""
+        from agentpack.manifest.schema import Manifest
+
+        manifest = Manifest.model_validate(
+            {
+                "version": "1",
+                "project": {"name": "test", "description": "test"},
+                "mcp": {
+                    "servers": {
+                        "special": {
+                            "transport": "stdio",
+                            "command": ["cmd", 'arg with "quotes"'],
+                            "env": {"PATH": "C:\\Program Files\\app"},
+                        },
+                    },
+                },
+            }
+        )
+        result = generate_codex_config(manifest)
+        # Quotes in args should be escaped
+        assert r'\"quotes\"' in result
+        # Backslashes should be escaped
+        assert r"\\" in result
