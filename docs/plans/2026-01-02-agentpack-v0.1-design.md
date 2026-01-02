@@ -27,10 +27,11 @@ agentpack generate [--write] [--stack <id>]
 3. stackごとにdeps/lint/typecheck/test/runが必ず提示される
 4. MCP定義から`.claude/settings.json`と`codex.config.toml`を生成できる
 5. http MCPの接続先をファイアウォール（init-firewall.sh）に自動追加できる（失敗時はwarning）
+6. Skills（required）のfrontmatter形式を検証できる
+7. 変数参照`${VAR}`が`.devcontainer/.env`に存在するか検証できる
 
 ### v0.1で対象外（v0.2以降）
 
-- Skills整合チェック
 - Drift/Lint
 - 推定補完
 - Hooks/Subagents生成
@@ -86,7 +87,7 @@ agentpack generate [--write] [--stack <id>]
 **生成物：**
 ```
 CLAUDE.md              # Claude Code用ドキュメント
-AGENTS.md              # Codex用ドキュメント
+AGENTS.md              # Codex用ドキュメント（CLAUDE.mdと同一内容）
 .claude/settings.json  # MCP設定（mcpServers）
 codex.config.toml      # Codex用MCP設定
 ```
@@ -109,6 +110,37 @@ codex.config.toml      # Codex用MCP設定
 
 ---
 
+## Stack選択ロジック
+
+### detect.any
+
+各stackに`detect.any`を定義し、ファイル存在チェックで自動選択：
+
+```yaml
+stacks:
+  python:
+    detect:
+      any: ["pyproject.toml", "requirements.txt"]
+  node:
+    detect:
+      any: ["package.json"]
+```
+
+### 選択ルール
+
+**single-stack（docs.mode: single-stack）：**
+- `--stack`指定あり: 指定されたstackを使用
+- `--stack auto`または未指定:
+  - detect一致が1件: それを採用
+  - detect一致が複数: エラー（曖昧）
+  - detect一致が0件: エラー（対象不明）
+
+**multi-stack（docs.mode: multi-stack）：**
+- detect一致のstackを列挙し、ドキュメント内でセクション分けして併記
+- 一致が0件の場合はエラー
+
+---
+
 ## Manifestフォーマット（agentpack.yml）
 
 ```yaml
@@ -118,15 +150,27 @@ project:
   name: "my-app"
   description: "プロジェクト概要"
 
-stack: python
+docs:
+  mode: single-stack        # single-stack | multi-stack
+  defaultStack: auto        # auto | <stack-id>
+  maxLines: 250             # 肥大化warning基準
+
+stack: python               # 使用するstack（single-stack時）
 
 stacks:
   python:
+    detect:
+      any: ["pyproject.toml", "requirements.txt"]
     deps: "uv sync"
     lint: "uv run ruff check ."
     typecheck: "uv run ty check"
     test: "uv run pytest"
     run: "uv run python main.py"
+    skills:
+      required: ["python-dev"]
+
+skills:
+  root: ".claude/skills"    # デフォルト
 
 mcp:
   servers:
@@ -149,6 +193,11 @@ workflows:
 
 pre_commit: ["prettier", "ruff", "ty"]
 
+safety:
+  preset: default           # default | none
+  custom:                   # 追加ルール（オプション）
+    - "本番DBに直接接続しない"
+
 custom_content: |
   ## クイックスタート
 
@@ -162,11 +211,70 @@ custom_content: |
   - `rg` > `grep`
 ```
 
+### Safetyプリセット
+
+**preset: default** の内容：
+1. secrets禁止（API_KEY等を直書きしない）
+2. 破壊操作は段階的に: dry-run → diff → apply
+
+---
+
+## Skills仕様
+
+### 位置
+
+`skills.root`で指定（デフォルト: `.claude/skills`）
+
+### 構造
+
+```
+.claude/skills/<skill-id>/SKILL.md
+```
+
+### 検証（v0.1）
+
+[agentskills.io仕様](https://agentskills.io/specification)に準拠：
+
+**frontmatter必須フィールド：**
+- `name`: 1-64文字、小文字英数字+ハイフン、親ディレクトリ名と一致
+- `description`: 1-1024文字
+
+```yaml
+---
+name: python-dev
+description: Python開発のベストプラクティスと手順
+---
+
+## 目的
+...
+```
+
+**検証内容：**
+- SKILL.mdの存在チェック
+- frontmatterのname, descriptionの存在と形式
+- nameとディレクトリ名の一致（v0.2で追加予定）
+
+---
+
+## 変数参照
+
+### 形式
+
+MCP設定内で`${VAR}`または`${env:VAR}`形式で環境変数を参照可能。
+
+### 検証
+
+- 生成時に展開しない（そのまま出力）
+- `.devcontainer/.env`に変数が定義されているかチェック
+- 未定義の場合はwarning
+
 ---
 
 ## 出力ファイルフォーマット
 
 ### CLAUDE.md / AGENTS.md
+
+両ファイルは**同一内容**で生成。
 
 ```markdown
 # {project.name}
@@ -193,7 +301,31 @@ custom_content: |
 - {pre_commit[1]}
 - ...
 
+## Safety
+
+- secrets禁止（API_KEY等を直書きしない）
+- 破壊操作は段階的に: dry-run → diff → apply
+{safety.custom}
+
 {custom_content}
+```
+
+### multi-stack時の構造
+
+```markdown
+# {project.name}
+
+{project.description}
+
+## Python
+
+### Commands
+...
+
+## Node
+
+### Commands
+...
 ```
 
 ### .claude/settings.json
@@ -214,7 +346,28 @@ custom_content: |
 
 ### codex.config.toml
 
-Codexの設定フォーマットに準拠（要調査）
+**STDIOサーバ：**
+```toml
+[mcp_servers.memory]
+command = "npx"
+args = ["@anthropic/mcp-memory"]
+env = { "MEMORY_PATH" = "${workspaceFolder}/.memory" }
+```
+
+**HTTPサーバ：**
+```toml
+[mcp_servers.external-api]
+url = "https://api.example.com/mcp"
+```
+
+**v0.1でサポートするフィールド：**
+- `command`, `args`, `env`, `cwd`（STDIO）
+- `url`（HTTP）
+
+**v0.2以降で追加予定：**
+- `startup_timeout_sec`, `tool_timeout_sec`
+- `enabled_tools`, `disabled_tools`
+- `bearer_token_env_var`, `http_headers`
 
 ---
 
@@ -230,10 +383,12 @@ src/agentpack/
     loader.py         # YAML読み込み・バリデーション
     schema.py         # Pydanticモデル定義
   generators/
-    claude_md.py      # CLAUDE.md生成
-    agents_md.py      # AGENTS.md生成
+    markdown.py       # CLAUDE.md/AGENTS.md生成（共通）
     settings.py       # .claude/settings.json生成
     codex_config.py   # codex.config.toml生成
+  validators/
+    skills.py         # Skills検証
+    env.py            # 環境変数検証
   devcontainer/
     firewall.py       # init-firewall.sh更新
     env.py            # .env.example更新
@@ -268,6 +423,8 @@ f-string/format を使用（Jinja2は使用しない）
 2. **ユニットテスト**
    - Manifestのバリデーション
    - 各ジェネレータの個別テスト
+   - Skills検証
+   - 環境変数検証
 
 3. **統合テスト**
    - `agentpack init` / `agentpack generate` のE2E
@@ -281,9 +438,11 @@ tests/
     minimal.yml
     full.yml
     python-stack.yml
+    multi-stack.yml
   snapshots/
   test_manifest.py
   test_generators.py
+  test_validators.py
   test_cli.py
 ```
 
@@ -298,8 +457,12 @@ tests/
 | HTTPライブラリ | httpx | モダン、同期/非同期両対応 |
 | バリデーション | pydantic | エコシステム充実、cyclopts統合 |
 | テンプレート生成 | f-string | シンプル、依存なし |
-| CLAUDE.md/AGENTS.md | 完全分離 | Claude Code専用 / Codex専用 |
-| Skills | 存在チェックのみ（v0.1） | 将来的に生成・lint追加 |
+| CLAUDE.md/AGENTS.md | 同一内容 | シンプルに保つ |
+| multi-stack | 対応 | モノレポ対応 |
+| Safety | プリセット＋カスタム | 柔軟性と簡便さのバランス |
+| Skills検証 | frontmatter検証 | agentskills.io仕様準拠 |
+| 変数参照検証 | .devcontainer/.env | devcontainer環境を想定 |
+| codex.config.toml | 基本フィールドのみ | 必要に応じて拡張 |
 | テンプレート継承 | コピー運用（v0.1） | 将来的にextends追加 |
 | ランタイムバージョン | 扱わない | シンプルに保つ |
 
@@ -307,12 +470,11 @@ tests/
 
 ## 今後の拡張（v0.2以降）
 
-- Skills整合チェック（Phase 1）
-- Drift/Lint（Phase 2）
-- 推定補完（Phase 3）
-- MCP詳細設定（Phase 4）
-- Hooks/Subagents生成（Phase 5）
-- Doctor（Phase 6）
+- Drift/Lint
+- 推定補完
+- MCP詳細設定（タイムアウト、ツール制限等）
+- Hooks/Subagents生成
+- Doctor
 - テンプレート継承（extends）
-- Skills生成・lint
+- Skills完全検証（name/ディレクトリ一致、行数警告）
 - 出力ターゲット選択（claude/codex）
