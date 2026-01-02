@@ -1,0 +1,16 @@
+# serializer version: 1
+# name: TestCodexConfigGenerator.test_generate_minimal
+  ''
+# ---
+# name: TestCodexConfigGenerator.test_generate_with_mcp
+  '''
+  [mcp_servers.memory]
+  command = "npx"
+  args = ["@anthropic/mcp-memory"]
+  env = { "MEMORY_PATH" = "${workspaceFolder}/.memory" }
+  
+  [mcp_servers.external-api]
+  url = "https://api.example.com/mcp"
+  
+  '''
+# ---
