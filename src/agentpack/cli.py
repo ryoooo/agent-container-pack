@@ -4,8 +4,10 @@ from pathlib import Path
 import sys
 
 import cyclopts
+import httpx
 
 from agentpack.generators import generate_claude_md, generate_codex_config, generate_settings_json
+from agentpack.init import download_template, generate_skeleton, parse_template_source
 from agentpack.manifest import load_manifest, ManifestNotFoundError, ManifestParseError
 from agentpack.validators import validate_env_vars, validate_skills
 
@@ -84,6 +86,53 @@ def generate(
         print("=== codex.config.toml ===")
         print(codex_config)
         print("\nUse --write to create files.")
+
+
+@app.command
+def init(
+    directory: Path = Path("."),
+    *,
+    template: str = "github:agentpack/template-default",
+    stack: str | None = None,
+    force: bool = False,
+) -> None:
+    """Initialize a new agentpack project.
+
+    Args:
+        directory: Target directory.
+        template: Template source.
+        stack: Stack to use.
+        force: Overwrite existing files.
+    """
+    directory = directory.resolve()
+
+    # Check for existing files
+    if not force:
+        if (directory / "agentpack.yml").exists():
+            print("Error: agentpack.yml already exists. Use --force to overwrite.", file=sys.stderr)
+            sys.exit(1)
+        if (directory / ".devcontainer").exists():
+            print("Error: .devcontainer already exists. Use --force to overwrite.", file=sys.stderr)
+            sys.exit(1)
+
+    directory.mkdir(parents=True, exist_ok=True)
+
+    try:
+        source = parse_template_source(template)
+        print(f"Downloading template from {template}...")
+        download_template(source, directory)
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except httpx.HTTPStatusError as e:
+        print(f"Error downloading template: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    generate_skeleton(directory, stack)
+
+    print(f"Initialized agentpack project in {directory}")
+    print("  - .devcontainer/")
+    print("  - agentpack.yml")
 
 
 if __name__ == "__main__":
