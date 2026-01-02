@@ -1,0 +1,55 @@
+# serializer version: 1
+# name: TestMarkdownGenerator.test_generate_full
+  '''
+  # full-project
+  
+  A full featured test project
+  
+  ## Commands
+  
+  - **deps**: `uv sync`
+  - **lint**: `uv run ruff check .`
+  - **typecheck**: `uv run ty check`
+  - **test**: `uv run pytest`
+  - **run**: `uv run python main.py`
+  
+  ## Workflows
+  
+  ### Development Flow
+  
+  1. `uv run ruff format . && uv run ruff check .`
+  2. `uv run pytest`
+  
+  ## Pre-commit
+  
+  - prettier
+  - ruff
+  - ty
+  
+  ## Safety
+  
+  - secrets禁止（API_KEY等を直書きしない）
+  - 破壊操作は段階的に: dry-run → diff → apply
+  - Do not connect to production DB directly
+  
+  ## Quick Start
+  
+  ```bash
+  python main.py
+  ```
+  
+  '''
+# ---
+# name: TestMarkdownGenerator.test_generate_minimal
+  '''
+  # minimal-project
+  
+  A minimal test project
+  
+  ## Safety
+  
+  - secrets禁止（API_KEY等を直書きしない）
+  - 破壊操作は段階的に: dry-run → diff → apply
+  
+  '''
+# ---
