@@ -65,7 +65,7 @@ def update_firewall(manifest: Manifest, project_dir: Path) -> FirewallUpdateResu
     content = firewall_script.read_text()
 
     # Find ALLOWED_DOMAINS array
-    pattern = r"(ALLOWED_DOMAINS=\(\s*\n)(.*?)(\n\s*\))"
+    pattern = r"(ALLOWED_DOMAINS=\(\s*\n)(.*?)(\))"
     match = re.search(pattern, content, re.DOTALL)
 
     if not match:
