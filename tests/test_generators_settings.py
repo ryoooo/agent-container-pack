@@ -1,0 +1,42 @@
+"""Tests for settings.json generator."""
+
+from pathlib import Path
+
+from syrupy.assertion import SnapshotAssertion
+
+from agentpack.generators.settings import generate_settings_json
+from agentpack.manifest import load_manifest
+
+
+class TestSettingsGenerator:
+    """Test .claude/settings.json generation."""
+
+    def test_generate_minimal(
+        self,
+        fixtures_dir: Path,
+        snapshot: SnapshotAssertion,
+    ) -> None:
+        """Generate settings from manifest with no MCP servers."""
+        manifest = load_manifest(fixtures_dir / "minimal.yml")
+        result = generate_settings_json(manifest)
+        assert result == snapshot
+
+    def test_generate_with_mcp(
+        self,
+        fixtures_dir: Path,
+        snapshot: SnapshotAssertion,
+    ) -> None:
+        """Generate settings with MCP servers."""
+        manifest = load_manifest(fixtures_dir / "full.yml")
+        result = generate_settings_json(manifest)
+        assert result == snapshot
+
+    def test_stdio_server_format(self, fixtures_dir: Path) -> None:
+        """STDIO servers use command/args format."""
+        import json
+
+        manifest = load_manifest(fixtures_dir / "full.yml")
+        result = generate_settings_json(manifest)
+        data = json.loads(result)
+        assert data["mcpServers"]["memory"]["command"] == "npx"
+        assert data["mcpServers"]["memory"]["args"] == ["@anthropic/mcp-memory"]

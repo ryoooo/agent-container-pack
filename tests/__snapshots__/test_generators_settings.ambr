@@ -1,0 +1,25 @@
+# serializer version: 1
+# name: TestSettingsGenerator.test_generate_minimal
+  '''
+  {}
+  
+  '''
+# ---
+# name: TestSettingsGenerator.test_generate_with_mcp
+  '''
+  {
+    "mcpServers": {
+      "memory": {
+        "command": "npx",
+        "args": [
+          "@anthropic/mcp-memory"
+        ],
+        "env": {
+          "MEMORY_PATH": "${workspaceFolder}/.memory"
+        }
+      }
+    }
+  }
+  
+  '''
+# ---
