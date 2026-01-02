@@ -1,0 +1,60 @@
+version: "1"
+
+project:
+  name: "full-project"
+  description: "A full featured test project"
+
+docs:
+  mode: single-stack
+  defaultStack: auto
+  maxLines: 250
+
+stack: python
+
+stacks:
+  python:
+    detect:
+      any: ["pyproject.toml", "requirements.txt"]
+    deps: "uv sync"
+    lint: "uv run ruff check ."
+    typecheck: "uv run ty check"
+    test: "uv run pytest"
+    run: "uv run python main.py"
+    skills:
+      required: ["python-dev"]
+
+skills:
+  root: ".claude/skills"
+
+mcp:
+  servers:
+    memory:
+      transport: stdio
+      command: ["npx", "@anthropic/mcp-memory"]
+      env:
+        MEMORY_PATH: "${workspaceFolder}/.memory"
+    external-api:
+      transport: http
+      url: "https://api.example.com/mcp"
+      env:
+        API_KEY: "${env:EXAMPLE_API_KEY}"
+
+workflows:
+  - name: "Development Flow"
+    steps:
+      - "uv run ruff format . && uv run ruff check ."
+      - "uv run pytest"
+
+pre_commit: ["prettier", "ruff", "ty"]
+
+safety:
+  preset: default
+  custom:
+    - "Do not connect to production DB directly"
+
+custom_content: |
+  ## Quick Start
+
+  ```bash
+  python main.py
+  ```
