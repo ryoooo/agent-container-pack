@@ -32,14 +32,12 @@ def main() -> None:
 def generate(
     *,
     write: bool = False,
-    stack: str | None = None,
     directory: Path = Path("."),
 ) -> None:
     """Generate configuration files from agentpack.yml.
 
     Args:
         write: Write files to disk (default: dry-run).
-        stack: Stack to use (default: auto-detect).
         directory: Project directory.
     """
     try:
