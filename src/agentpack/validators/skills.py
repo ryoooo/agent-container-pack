@@ -97,7 +97,9 @@ def _validate_skill(skill_id: str, skill_path: Path) -> list[SkillsValidationErr
     return errors
 
 
-def validate_skills(manifest: Manifest, project_dir: Path) -> list[SkillsValidationError]:
+def validate_skills(
+    manifest: Manifest, project_dir: Path
+) -> list[SkillsValidationError]:
     """Validate all required skills.
 
     Args:

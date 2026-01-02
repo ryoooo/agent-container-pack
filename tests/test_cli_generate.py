@@ -56,9 +56,13 @@ class TestGenerateCommand:
         )
 
         assert result.returncode != 0
-        assert "not found" in result.stderr.lower() or "not found" in result.stdout.lower()
+        assert (
+            "not found" in result.stderr.lower() or "not found" in result.stdout.lower()
+        )
 
-    def test_generate_updates_firewall(self, fixtures_dir: Path, tmp_path: Path) -> None:
+    def test_generate_updates_firewall(
+        self, fixtures_dir: Path, tmp_path: Path
+    ) -> None:
         """Generate updates firewall with HTTP MCP domains."""
         import shutil
 

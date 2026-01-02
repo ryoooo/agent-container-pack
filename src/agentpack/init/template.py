@@ -100,7 +100,7 @@ def generate_skeleton(target_dir: Path, stack: str | None = None) -> None:
         target_dir: Directory to create skeleton in.
         stack: Optional stack to include.
     """
-    skeleton = '''version: "1"
+    skeleton = """version: "1"
 
 project:
   name: "my-project"
@@ -109,7 +109,7 @@ project:
 docs:
   mode: single-stack
   defaultStack: auto
-'''
+"""
 
     if stack:
         skeleton += f"""

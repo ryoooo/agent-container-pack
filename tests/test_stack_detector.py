@@ -19,7 +19,9 @@ class TestStackDetection:
         result = detect_stack(manifest, tmp_path)
         assert result == "python"
 
-    def test_detect_python_requirements(self, fixtures_dir: Path, tmp_path: Path) -> None:
+    def test_detect_python_requirements(
+        self, fixtures_dir: Path, tmp_path: Path
+    ) -> None:
         """Detect Python stack from requirements.txt."""
         manifest = load_manifest(fixtures_dir / "full.yml")
         (tmp_path / "requirements.txt").touch()

@@ -15,7 +15,9 @@ class TestFirewallUpdater:
         domains = extract_domains(manifest)
         assert "api.example.com" in domains
 
-    def test_update_firewall_adds_domain(self, fixtures_dir: Path, tmp_path: Path) -> None:
+    def test_update_firewall_adds_domain(
+        self, fixtures_dir: Path, tmp_path: Path
+    ) -> None:
         """Add domain to init-firewall.sh."""
         manifest = load_manifest(fixtures_dir / "full.yml")
 

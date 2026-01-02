@@ -60,7 +60,9 @@ mcp:
             text=True,
         )
 
-        assert result.returncode == 0, f"stdout: {result.stdout}\nstderr: {result.stderr}"
+        assert result.returncode == 0, (
+            f"stdout: {result.stdout}\nstderr: {result.stderr}"
+        )
 
         # Verify outputs
         claude_md = (tmp_path / "CLAUDE.md").read_text()

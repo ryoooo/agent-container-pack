@@ -61,7 +61,9 @@ def _parse_env_file(path: Path) -> set[str]:
     return defined
 
 
-def validate_env_vars(manifest: Manifest, project_dir: Path) -> list[EnvValidationWarning]:
+def validate_env_vars(
+    manifest: Manifest, project_dir: Path
+) -> list[EnvValidationWarning]:
     """Validate environment variable references.
 
     Args:

@@ -21,9 +21,7 @@ class TestEnvValidation:
         warnings = validate_env_vars(manifest, tmp_path)
         assert len(warnings) == 0
 
-    def test_warning_for_missing_var(
-        self, fixtures_dir: Path, tmp_path: Path
-    ) -> None:
+    def test_warning_for_missing_var(self, fixtures_dir: Path, tmp_path: Path) -> None:
         """Warning when referenced variable is missing."""
         manifest = load_manifest(fixtures_dir / "full.yml")
         devcontainer = tmp_path / ".devcontainer"

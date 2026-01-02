@@ -7,7 +7,11 @@ import cyclopts
 import httpx
 
 from agentpack.devcontainer import update_firewall
-from agentpack.generators import generate_claude_md, generate_codex_config, generate_settings_json
+from agentpack.generators import (
+    generate_claude_md,
+    generate_codex_config,
+    generate_settings_json,
+)
 from agentpack.init import download_template, generate_skeleton, parse_template_source
 from agentpack.manifest import load_manifest, ManifestNotFoundError, ManifestParseError
 from agentpack.validators import validate_env_vars, validate_skills
@@ -21,7 +25,7 @@ app = cyclopts.App(
 @app.default
 def main() -> None:
     """Show help by default."""
-    print(app.help_format())
+    app(["--help"])
 
 
 @app.command
@@ -76,8 +80,13 @@ def generate(
         # Update firewall
         firewall_result = update_firewall(manifest, directory)
         if firewall_result.success and firewall_result.domains_added > 0:
-            print(f"  - Updated init-firewall.sh ({firewall_result.domains_added} domains added)")
-        elif not firewall_result.success and "not found" not in firewall_result.message.lower():
+            print(
+                f"  - Updated init-firewall.sh ({firewall_result.domains_added} domains added)"
+            )
+        elif (
+            not firewall_result.success
+            and "not found" not in firewall_result.message.lower()
+        ):
             print(f"Warning: {firewall_result.message}", file=sys.stderr)
 
         print("Generated:")
@@ -117,10 +126,16 @@ def init(
     # Check for existing files
     if not force:
         if (directory / "agentpack.yml").exists():
-            print("Error: agentpack.yml already exists. Use --force to overwrite.", file=sys.stderr)
+            print(
+                "Error: agentpack.yml already exists. Use --force to overwrite.",
+                file=sys.stderr,
+            )
             sys.exit(1)
         if (directory / ".devcontainer").exists():
-            print("Error: .devcontainer already exists. Use --force to overwrite.", file=sys.stderr)
+            print(
+                "Error: .devcontainer already exists. Use --force to overwrite.",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
     directory.mkdir(parents=True, exist_ok=True)
