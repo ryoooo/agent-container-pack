@@ -22,13 +22,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   iproute2 \
   dnsutils \
   aggregate \
-  fd \
+  fd-find \
   ripgrep \
   jq \
   sd \
   nano \
   vim \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
+  && apt-get clean && rm -rf /var/lib/apt/lists/* \
+  && ln -s $(which fdfind) /usr/local/bin/fd
 
 # Ensure default node user has access to /usr/local/share
 RUN mkdir -p /usr/local/share/npm-global && \
