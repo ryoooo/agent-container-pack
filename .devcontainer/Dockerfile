@@ -22,7 +22,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   iproute2 \
   dnsutils \
   aggregate \
+  fd \
+  ripgrep \
   jq \
+  sd \
   nano \
   vim \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
