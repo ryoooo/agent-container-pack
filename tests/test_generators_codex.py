@@ -66,7 +66,7 @@ class TestCodexConfigGenerator:
         )
         result = generate_codex_config(manifest)
         # Quotes in args should be escaped
-        assert r'\"quotes\"' in result
+        assert r"\"quotes\"" in result
         # Backslashes should be escaped
         assert r"\\" in result
 

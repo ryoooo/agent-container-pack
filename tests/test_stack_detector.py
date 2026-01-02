@@ -6,7 +6,11 @@ import pytest
 
 from agentpack.manifest import load_manifest
 from agentpack.manifest.schema import Manifest
-from agentpack.stack.detector import AmbiguousStackError, detect_stack, NoStackDetectedError
+from agentpack.stack.detector import (
+    AmbiguousStackError,
+    detect_stack,
+    NoStackDetectedError,
+)
 
 
 class TestStackDetection:
