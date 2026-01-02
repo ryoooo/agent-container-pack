@@ -57,3 +57,30 @@ class TestGenerateCommand:
 
         assert result.returncode != 0
         assert "not found" in result.stderr.lower() or "not found" in result.stdout.lower()
+
+    def test_generate_updates_firewall(self, fixtures_dir: Path, tmp_path: Path) -> None:
+        """Generate updates firewall with HTTP MCP domains."""
+        import shutil
+
+        shutil.copy(fixtures_dir / "full.yml", tmp_path / "agentpack.yml")
+
+        devcontainer = tmp_path / ".devcontainer"
+        devcontainer.mkdir()
+        (devcontainer / "init-firewall.sh").write_text(
+            """#!/bin/bash
+ALLOWED_DOMAINS=(
+    "existing.com"
+)
+"""
+        )
+
+        result = subprocess.run(
+            [sys.executable, "-m", "agentpack", "generate", "--write"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode == 0
+        content = (devcontainer / "init-firewall.sh").read_text()
+        assert "api.example.com" in content
