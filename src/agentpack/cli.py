@@ -108,7 +108,7 @@ def init(
     directory: Path = Path("."),
     *,
     template: str = "github:ryoooo/agentpack-template-default",
-    stack: str | None = None,
+    stack: str = "python",
     force: bool = False,
 ) -> None:
     """Initialize a new agentpack project.

@@ -22,3 +22,6 @@ htmlcov/
 # Secrets
 .devcontainer/.env
 mise.local.toml
+
+# MCP config (may contain API keys)
+.mcp.json

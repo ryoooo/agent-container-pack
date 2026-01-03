@@ -10,17 +10,57 @@ Claude Code and Codex CLI have different configuration formats. agentpack uses a
 - `.claude/settings.json` - Claude Code MCP configuration
 - `codex.config.toml` - Codex CLI MCP configuration
 
-## Quick Start
+## Usage
+
+### New Project
 
 ```bash
-# Install
-uv add agentpack
+# 1. Initialize project (creates .devcontainer/ and agentpack.yml)
+cd my-project
+agentpack init
 
-# Initialize a new project
-agentpack init --stack python
+# 2. Edit agentpack.yml (project name, MCP servers, etc.)
+vim agentpack.yml
 
-# Generate configuration files
+# 3. Generate configuration files
 agentpack generate --write
+```
+
+### Existing Project
+
+```bash
+# 1. Create agentpack.yml manually or via init
+agentpack init
+
+# 2. Edit agentpack.yml to match your project
+vim agentpack.yml
+
+# 3. Generate
+agentpack generate --write
+```
+
+### Team Workflow
+
+```bash
+# Team members clone the repo and run:
+git clone <repo>
+cd <repo>
+agentpack generate --write
+# → Ready to use Claude Code / Codex CLI
+```
+
+### Workflow Diagram
+
+```
+agentpack init          # Run once
+       ↓
+agentpack.yml           # Edit this file (single source of truth)
+       ↓
+agentpack generate      # Run after each yml change
+       ↓
+CLAUDE.md, AGENTS.md    # Auto-generated (don't edit manually)
+.claude/settings.json
+codex.config.toml
 ```
 
 ## Commands
@@ -37,7 +77,7 @@ agentpack init [directory] [--template <source>] [--stack <id>] [--force]
 |--------|-------------|---------|
 | `directory` | Target directory | `.` |
 | `--template` | Template source | `github:ryoooo/agentpack-template-default` |
-| `--stack` | Stack to use (python, node, etc.) | - |
+| `--stack` | Stack to use (python, node, etc.) | `python` |
 | `--force` | Overwrite existing files | `false` |
 
 ### `agentpack generate`
@@ -78,11 +118,11 @@ stacks:
 
 mcp:
   servers:
-    memory:
-      transport: stdio
-      command: ["npx", "@anthropic/mcp-memory"]
+    Ref:
+      transport: http
+      url: "https://api.ref.tools/mcp"
       env:
-        MEMORY_PATH: "${workspaceFolder}/.memory"
+        X_REF_API_KEY: "${env:X_REF_API_KEY}"
 
 workflows:
   - name: "Development Flow"
