@@ -4,8 +4,17 @@ from agentpack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
 
 
 def _escape_toml_string(value: str) -> str:
-    """Escape a string for TOML output."""
-    return value.replace("\\", "\\\\").replace('"', '\\"')
+    """Escape a string for TOML output.
+
+    Escapes backslashes, quotes, and newlines to prevent TOML injection.
+    """
+    return (
+        value.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t")
+    )
 
 
 def _format_toml_value(value: str | list[str] | dict[str, str]) -> str:
@@ -27,6 +36,10 @@ def _format_toml_value(value: str | list[str] | dict[str, str]) -> str:
 def generate_codex_config(manifest: Manifest) -> str:
     """Generate codex.config.toml content from manifest.
 
+    Codex CLI supports both stdio and HTTP servers.
+    - stdio: command, args, env, cwd
+    - HTTP: url (env is not valid for HTTP in Codex)
+
     Args:
         manifest: Validated manifest object.
 
@@ -47,9 +60,8 @@ def generate_codex_config(manifest: Manifest) -> str:
             if server.cwd:
                 lines.append(f'cwd = "{_escape_toml_string(server.cwd)}"')
         elif isinstance(server, MCPServerHTTP):
+            # Codex HTTP servers use url only (env is not valid for HTTP)
             lines.append(f'url = "{_escape_toml_string(server.url)}"')
-            if server.env:
-                lines.append(f"env = {_format_toml_value(server.env)}")
 
         lines.append("")
 

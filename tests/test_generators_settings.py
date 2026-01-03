@@ -40,3 +40,15 @@ class TestSettingsGenerator:
         data = json.loads(result)
         assert data["mcpServers"]["memory"]["command"] == "npx"
         assert data["mcpServers"]["memory"]["args"] == ["@anthropic/mcp-memory"]
+
+    def test_http_server_format(self, fixtures_dir: Path) -> None:
+        """HTTP servers use type/url format per Claude Code spec."""
+        import json
+
+        manifest = load_manifest(fixtures_dir / "full.yml")
+        result = generate_settings_json(manifest)
+        data = json.loads(result)
+        # HTTP server should be included with type field
+        assert "external-api" in data["mcpServers"]
+        assert data["mcpServers"]["external-api"]["type"] == "http"
+        assert data["mcpServers"]["external-api"]["url"] == "https://api.example.com/mcp"

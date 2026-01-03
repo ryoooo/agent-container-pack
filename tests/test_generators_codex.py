@@ -38,8 +38,8 @@ class TestCodexConfigGenerator:
         assert "[mcp_servers.memory]" in result
         assert 'command = "npx"' in result
 
-    def test_http_format(self, fixtures_dir: Path) -> None:
-        """HTTP servers have url field."""
+    def test_http_server_format(self, fixtures_dir: Path) -> None:
+        """HTTP servers use url field per Codex spec."""
         manifest = load_manifest(fixtures_dir / "full.yml")
         result = generate_codex_config(manifest)
         assert "[mcp_servers.external-api]" in result
@@ -70,8 +70,36 @@ class TestCodexConfigGenerator:
         # Backslashes should be escaped
         assert r"\\" in result
 
-    def test_http_server_env_output(self) -> None:
-        """HTTP servers output env variables."""
+    def test_escapes_newlines_prevents_injection(self) -> None:
+        """Newlines in env values are escaped to prevent TOML injection."""
+        from agentpack.manifest.schema import Manifest
+
+        manifest = Manifest.model_validate(
+            {
+                "version": "1",
+                "project": {"name": "test", "description": "test"},
+                "mcp": {
+                    "servers": {
+                        "test": {
+                            "transport": "stdio",
+                            "command": ["cmd"],
+                            "env": {"KEY": 'value"}\n[evil]\nmalicious = "true'},
+                        },
+                    },
+                },
+            }
+        )
+        result = generate_codex_config(manifest)
+        # Should only have one section (no injection)
+        assert result.count("[mcp_servers.") == 1
+        # Newlines should be escaped as \n
+        assert r"\n" in result
+        # The output should be valid - all on expected number of lines
+        lines = result.strip().split("\n")
+        assert len(lines) == 3  # section, command, env
+
+    def test_http_server_no_env_in_output(self) -> None:
+        """HTTP servers don't output env (use http_headers instead per Codex spec)."""
         from agentpack.manifest.schema import Manifest
 
         manifest = Manifest.model_validate(
@@ -90,5 +118,8 @@ class TestCodexConfigGenerator:
             }
         )
         result = generate_codex_config(manifest)
-        assert "API_KEY" in result
-        assert "${env:SECRET}" in result or r"\${env:SECRET}" in result
+        # HTTP server should be in output with url
+        assert "[mcp_servers.api]" in result
+        assert 'url = "https://api.example.com/mcp"' in result
+        # env is not a valid Codex HTTP field - should not be output
+        assert "API_KEY" not in result

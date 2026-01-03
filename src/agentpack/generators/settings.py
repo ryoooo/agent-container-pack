@@ -3,7 +3,7 @@
 import json
 from typing import Any
 
-from agentpack.manifest.schema import Manifest, MCPServerStdio
+from agentpack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
 
 
 def generate_settings_json(manifest: Manifest) -> str:
@@ -27,8 +27,15 @@ def generate_settings_json(manifest: Manifest) -> str:
                 server_config["env"] = server.env
             if server.cwd:
                 server_config["cwd"] = server.cwd
+        elif isinstance(server, MCPServerHTTP):
+            # HTTP servers require type field per Claude Code spec
+            server_config = {
+                "type": "http",
+                "url": server.url,
+            }
+            if server.env:
+                server_config["env"] = server.env
         else:
-            # HTTP server - skip for Claude settings (not supported)
             continue
 
         mcp_servers[name] = server_config

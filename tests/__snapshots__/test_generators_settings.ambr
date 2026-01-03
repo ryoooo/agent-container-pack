@@ -17,6 +17,13 @@
         "env": {
           "MEMORY_PATH": "${workspaceFolder}/.memory"
         }
+      },
+      "external-api": {
+        "type": "http",
+        "url": "https://api.example.com/mcp",
+        "env": {
+          "API_KEY": "${env:EXAMPLE_API_KEY}"
+        }
       }
     }
   }

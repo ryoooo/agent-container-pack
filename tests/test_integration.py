@@ -46,6 +46,9 @@ mcp:
     api:
       transport: http
       url: "https://api.test.com/mcp"
+    memory:
+      transport: stdio
+      command: ["npx", "@anthropic/mcp-memory"]
 """
         )
 
@@ -71,10 +74,13 @@ mcp:
         assert "uv run pytest" in claude_md
 
         settings = (tmp_path / ".claude" / "settings.json").read_text()
-        # HTTP servers are not in settings.json
-        assert "{" in settings
+        # HTTP servers use type field in settings.json
+        assert '"type": "http"' in settings
+        assert "api.test.com" in settings
 
         codex_config = (tmp_path / "codex.config.toml").read_text()
+        # Codex supports both stdio and HTTP servers
+        assert "[mcp_servers.memory]" in codex_config
         assert "[mcp_servers.api]" in codex_config
         assert "api.test.com" in codex_config
 
