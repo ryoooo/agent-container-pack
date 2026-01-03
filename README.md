@@ -15,7 +15,7 @@ Claude Code and Codex CLI have different configuration formats. acpack uses a si
 
 ```bash
 # With uvx (no install required)
-uvx --from acpack acpack --help
+uvx acpack --help
 
 # Or install globally (recommended)
 uv tool install acpack
