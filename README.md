@@ -36,7 +36,7 @@ agentpack init [directory] [--template <source>] [--stack <id>] [--force]
 | Option | Description | Default |
 |--------|-------------|---------|
 | `directory` | Target directory | `.` |
-| `--template` | Template source | `github:agentpack/template-default` |
+| `--template` | Template source | `github:ryoooo/agentpack-template-default` |
 | `--stack` | Stack to use (python, node, etc.) | - |
 | `--force` | Overwrite existing files | `false` |
 

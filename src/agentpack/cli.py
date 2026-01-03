@@ -107,7 +107,7 @@ def generate(
 def init(
     directory: Path = Path("."),
     *,
-    template: str = "github:agentpack/template-default",
+    template: str = "github:ryoooo/agentpack-template-default",
     stack: str | None = None,
     force: bool = False,
 ) -> None:
