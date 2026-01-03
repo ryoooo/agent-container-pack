@@ -13,11 +13,12 @@ Claude Code and Codex CLI have different configuration formats. acp uses a singl
 ## Installation
 
 ```bash
-# With uv (recommended)
-uvx acp --help
+# With uvx (no install required)
+uvx --from agent-container-pack acp --help
 
-# Or install globally
+# Or install globally (recommended)
 uv tool install agent-container-pack
+acp --help
 
 # Or with pip
 pip install agent-container-pack
