@@ -149,7 +149,9 @@ def init(
         print(f"Error downloading template: {e}", file=sys.stderr)
         sys.exit(1)
 
-    generate_skeleton(directory, stack)
+    # Only generate skeleton if template didn't include agentpack.yml
+    if not (directory / "agentpack.yml").exists():
+        generate_skeleton(directory, stack)
 
     print(f"Initialized agentpack project in {directory}")
     print("  - .devcontainer/")

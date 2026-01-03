@@ -78,7 +78,7 @@ def download_template(source: TemplateSource, target_dir: Path) -> None:
         else:
             zip_prefix = f"{root_prefix}/"
 
-        # Extract only .devcontainer contents
+        # Extract .devcontainer contents
         devcontainer_prefix = f"{zip_prefix}.devcontainer/"
         target_devcontainer = target_dir / ".devcontainer"
         target_devcontainer.mkdir(parents=True, exist_ok=True)
@@ -91,6 +91,11 @@ def download_template(source: TemplateSource, target_dir: Path) -> None:
                     target_file = target_devcontainer / rel_path
                     target_file.parent.mkdir(parents=True, exist_ok=True)
                     target_file.write_bytes(zf.read(name))
+
+        # Extract agentpack.yml from template
+        agentpack_yml_path = f"{zip_prefix}agentpack.yml"
+        if agentpack_yml_path in zf.namelist():
+            (target_dir / "agentpack.yml").write_bytes(zf.read(agentpack_yml_path))
 
 
 def generate_skeleton(target_dir: Path, stack: str | None = None) -> None:
