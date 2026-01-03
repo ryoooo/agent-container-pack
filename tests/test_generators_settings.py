@@ -51,4 +51,6 @@ class TestSettingsGenerator:
         # HTTP server should be included with type field
         assert "external-api" in data["mcpServers"]
         assert data["mcpServers"]["external-api"]["type"] == "http"
-        assert data["mcpServers"]["external-api"]["url"] == "https://api.example.com/mcp"
+        assert (
+            data["mcpServers"]["external-api"]["url"] == "https://api.example.com/mcp"
+        )

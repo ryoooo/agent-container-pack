@@ -1,10 +1,10 @@
-# agent-container-pack (acp)
+# agent-container-pack (acpack)
 
 CLI tool that generates CLAUDE.md/AGENTS.md and MCP configurations from a single `agentpack.yml` manifest.
 
-## Why acp?
+## Why acpack?
 
-Claude Code and Codex CLI have different configuration formats. acp uses a single YAML manifest (`agentpack.yml`) as the source of truth, generating the appropriate files for each tool:
+Claude Code and Codex CLI have different configuration formats. acpack uses a single YAML manifest (`agentpack.yml`) as the source of truth, generating the appropriate files for each tool:
 
 - `CLAUDE.md` / `AGENTS.md` - Project instructions
 - `.claude/settings.json` - Claude Code MCP configuration
@@ -14,11 +14,11 @@ Claude Code and Codex CLI have different configuration formats. acp uses a singl
 
 ```bash
 # With uvx (no install required)
-uvx --from agent-container-pack acp --help
+uvx --from agent-container-pack acpack --help
 
 # Or install globally (recommended)
 uv tool install agent-container-pack
-acp --help
+acpack --help
 
 # Or with pip
 pip install agent-container-pack
@@ -31,26 +31,26 @@ pip install agent-container-pack
 ```bash
 # 1. Initialize project (creates .devcontainer/ and agentpack.yml)
 cd my-project
-acp init
+acpack init
 
 # 2. Edit agentpack.yml (project name, MCP servers, etc.)
 vim agentpack.yml
 
 # 3. Generate configuration files
-acp generate --write
+acpack generate --write
 ```
 
 ### Existing Project
 
 ```bash
 # 1. Create agentpack.yml manually or via init
-acp init
+acpack init
 
 # 2. Edit agentpack.yml to match your project
 vim agentpack.yml
 
 # 3. Generate
-acp generate --write
+acpack generate --write
 ```
 
 ### Team Workflow
@@ -59,18 +59,18 @@ acp generate --write
 # Team members clone the repo and run:
 git clone <repo>
 cd <repo>
-acp generate --write
+acpack generate --write
 # → Ready to use Claude Code / Codex CLI
 ```
 
 ### Workflow Diagram
 
 ```
-acp init          # Run once
+acpack init          # Run once
        ↓
 agentpack.yml           # Edit this file (single source of truth)
        ↓
-acp generate      # Run after each yml change
+acpack generate      # Run after each yml change
        ↓
 CLAUDE.md, AGENTS.md    # Auto-generated (don't edit manually)
 .claude/settings.json
@@ -79,27 +79,27 @@ codex.config.toml
 
 ## Commands
 
-### `acp init`
+### `acpack init`
 
 Initialize a new agentpack project with devcontainer and manifest skeleton.
 
 ```bash
-acp init [directory] [--template <source>] [--stack <id>] [--force]
+acpack init [directory] [--template <source>] [--stack <id>] [--force]
 ```
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `directory` | Target directory | `.` |
-| `--template` | Template source | `github:ryoooo/acp-template-default` |
+| `--template` | Template source | `github:ryoooo/acpack-template-default` |
 | `--stack` | Stack to use (python, node, etc.) | `python` |
 | `--force` | Overwrite existing files | `false` |
 
-### `acp generate`
+### `acpack generate`
 
 Generate configuration files from `agentpack.yml`.
 
 ```bash
-acp generate [--write] [--directory <path>]
+acpack generate [--write] [--directory <path>]
 ```
 
 | Option | Description | Default |

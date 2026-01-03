@@ -20,7 +20,7 @@ Homepage = "https://github.com/ryoooo/agent-container-pack"
 Repository = "https://github.com/ryoooo/agent-container-pack"
 
 [project.scripts]
-acp = "agent_container_pack.cli:app"
+acpack = "agent_container_pack.cli:app"
 
 [dependency-groups]
 dev = [
