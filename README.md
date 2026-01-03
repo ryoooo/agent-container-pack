@@ -1,4 +1,5 @@
 # agent-container-pack (acpack)
+The shortest path to vibe coding.
 
 CLI tool that generates CLAUDE.md/AGENTS.md and MCP configurations from a single `agentpack.yml` manifest.
 
@@ -14,14 +15,14 @@ Claude Code and Codex CLI have different configuration formats. acpack uses a si
 
 ```bash
 # With uvx (no install required)
-uvx --from agent-container-pack acpack --help
+uvx --from acpack acpack --help
 
 # Or install globally (recommended)
-uv tool install agent-container-pack
+uv tool install acpack
 acpack --help
 
 # Or with pip
-pip install agent-container-pack
+pip install acpack
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 [project]
-name = "agent-container-pack"
-version = "0.1.0"
+name = "acpack"
+version = "0.1.1"
 description = "CLI tool for generating CLAUDE.md/AGENTS.md from agentpack.yml"
 readme = "README.md"
 authors = [{ name = "ryoooo" }]
