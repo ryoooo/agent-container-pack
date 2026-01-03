@@ -15,7 +15,7 @@ class TestGenerateCommand:
         shutil.copy(fixtures_dir / "minimal.yml", tmp_path / "agentpack.yml")
 
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate"],
+            [sys.executable, "-m", "agent_container_pack", "generate"],
             cwd=tmp_path,
             capture_output=True,
             text=True,
@@ -34,7 +34,7 @@ class TestGenerateCommand:
         shutil.copy(fixtures_dir / "full.yml", tmp_path / "agentpack.yml")
 
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate", "--write"],
+            [sys.executable, "-m", "agent_container_pack", "generate", "--write"],
             cwd=tmp_path,
             capture_output=True,
             text=True,
@@ -49,7 +49,7 @@ class TestGenerateCommand:
     def test_generate_manifest_not_found(self, tmp_path: Path) -> None:
         """Error when agentpack.yml not found."""
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate"],
+            [sys.executable, "-m", "agent_container_pack", "generate"],
             cwd=tmp_path,
             capture_output=True,
             text=True,
@@ -79,7 +79,7 @@ ALLOWED_DOMAINS=(
         )
 
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate", "--write"],
+            [sys.executable, "-m", "agent_container_pack", "generate", "--write"],
             cwd=tmp_path,
             capture_output=True,
             text=True,

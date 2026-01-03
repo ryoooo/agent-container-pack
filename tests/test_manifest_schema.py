@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from agentpack.manifest.schema import Manifest
+from agent_container_pack.manifest.schema import Manifest
 
 
 class TestManifestValidation:

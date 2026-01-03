@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
 
-from agentpack.manifest.schema import Manifest, MCPServerHTTP
+from agent_container_pack.manifest.schema import Manifest, MCPServerHTTP
 
 
 @dataclass

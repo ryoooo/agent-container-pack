@@ -57,7 +57,7 @@ mcp:
 
         # Run generate
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate", "--write"],
+            [sys.executable, "-m", "agent_container_pack", "generate", "--write"],
             cwd=tmp_path,
             capture_output=True,
             text=True,
@@ -105,7 +105,7 @@ stacks:
         )
 
         result = subprocess.run(
-            [sys.executable, "-m", "agentpack", "generate"],
+            [sys.executable, "-m", "agent_container_pack", "generate"],
             cwd=tmp_path,
             capture_output=True,
             text=True,

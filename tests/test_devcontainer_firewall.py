@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from agentpack.devcontainer.firewall import update_firewall, extract_domains
-from agentpack.manifest import load_manifest
+from agent_container_pack.devcontainer.firewall import update_firewall, extract_domains
+from agent_container_pack.manifest import load_manifest
 
 
 class TestFirewallUpdater:

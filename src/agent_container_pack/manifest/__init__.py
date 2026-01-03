@@ -1,12 +1,12 @@
 """Manifest parsing and validation."""
 
-from agentpack.manifest.loader import (
+from agent_container_pack.manifest.loader import (
     ManifestError,
     ManifestNotFoundError,
     ManifestParseError,
     load_manifest,
 )
-from agentpack.manifest.schema import Manifest
+from agent_container_pack.manifest.schema import Manifest
 
 __all__ = [
     "Manifest",

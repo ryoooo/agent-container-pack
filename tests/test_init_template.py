@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from agentpack.init.template import parse_template_source, download_template
+from agent_container_pack.init.template import parse_template_source, download_template
 
 
 class TestTemplateSource:
@@ -53,7 +53,7 @@ class TestDownloadTemplate:
     def test_download_creates_files(self, tmp_path: Path) -> None:
         """Download template creates expected files."""
         # Mock httpx response
-        with patch("agentpack.init.template.httpx") as mock_httpx:
+        with patch("agent_container_pack.init.template.httpx") as mock_httpx:
             import zipfile
             import io
 
@@ -80,7 +80,7 @@ class TestGenerateSkeleton:
 
     def test_generate_skeleton_basic(self, tmp_path: Path) -> None:
         """Generate basic skeleton without stack."""
-        from agentpack.init.template import generate_skeleton
+        from agent_container_pack.init.template import generate_skeleton
 
         generate_skeleton(tmp_path)
 
@@ -91,7 +91,7 @@ class TestGenerateSkeleton:
 
     def test_generate_skeleton_with_stack(self, tmp_path: Path) -> None:
         """Generate skeleton with specific stack."""
-        from agentpack.init.template import generate_skeleton
+        from agent_container_pack.init.template import generate_skeleton
 
         generate_skeleton(tmp_path, stack="python")
 

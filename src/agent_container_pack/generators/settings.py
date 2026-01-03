@@ -3,7 +3,7 @@
 import json
 from typing import Any
 
-from agentpack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
+from agent_container_pack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
 
 
 def generate_settings_json(manifest: Manifest) -> str:

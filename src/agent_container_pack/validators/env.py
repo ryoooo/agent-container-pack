@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from agentpack.manifest.schema import Manifest
+from agent_container_pack.manifest.schema import Manifest
 
 # Match ${VAR} or ${env:VAR}
 ENV_REF_PATTERN = re.compile(r"\$\{(?:env:)?([A-Z_][A-Z0-9_]*)\}")

@@ -1,6 +1,6 @@
 """Template initialization."""
 
-from agentpack.init.template import (
+from agent_container_pack.init.template import (
     download_template,
     generate_skeleton,
     parse_template_source,

@@ -1,6 +1,6 @@
 """Generate codex.config.toml from manifest."""
 
-from agentpack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
+from agent_container_pack.manifest.schema import Manifest, MCPServerHTTP, MCPServerStdio
 
 
 def _escape_toml_string(value: str) -> str:

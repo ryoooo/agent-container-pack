@@ -4,8 +4,8 @@ from pathlib import Path
 
 from syrupy.assertion import SnapshotAssertion
 
-from agentpack.generators.settings import generate_settings_json
-from agentpack.manifest import load_manifest
+from agent_container_pack.generators.settings import generate_settings_json
+from agent_container_pack.manifest import load_manifest
 
 
 class TestSettingsGenerator:

@@ -4,8 +4,8 @@ from pathlib import Path
 
 from syrupy.assertion import SnapshotAssertion
 
-from agentpack.generators.codex_config import generate_codex_config
-from agentpack.manifest import load_manifest
+from agent_container_pack.generators.codex_config import generate_codex_config
+from agent_container_pack.manifest import load_manifest
 
 
 class TestCodexConfigGenerator:
@@ -47,7 +47,7 @@ class TestCodexConfigGenerator:
 
     def test_escapes_special_characters(self) -> None:
         """TOML strings with quotes/backslashes are properly escaped."""
-        from agentpack.manifest.schema import Manifest
+        from agent_container_pack.manifest.schema import Manifest
 
         manifest = Manifest.model_validate(
             {
@@ -72,7 +72,7 @@ class TestCodexConfigGenerator:
 
     def test_escapes_newlines_prevents_injection(self) -> None:
         """Newlines in env values are escaped to prevent TOML injection."""
-        from agentpack.manifest.schema import Manifest
+        from agent_container_pack.manifest.schema import Manifest
 
         manifest = Manifest.model_validate(
             {
@@ -100,7 +100,7 @@ class TestCodexConfigGenerator:
 
     def test_http_server_no_env_in_output(self) -> None:
         """HTTP servers don't output env (use http_headers instead per Codex spec)."""
-        from agentpack.manifest.schema import Manifest
+        from agent_container_pack.manifest.schema import Manifest
 
         manifest = Manifest.model_validate(
             {

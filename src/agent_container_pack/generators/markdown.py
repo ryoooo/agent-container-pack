@@ -1,6 +1,6 @@
 """Generate CLAUDE.md / AGENTS.md from manifest."""
 
-from agentpack.manifest.schema import Manifest, SafetyConfig
+from agent_container_pack.manifest.schema import Manifest, SafetyConfig
 
 SAFETY_PRESET_DEFAULT = [
     "secrets禁止（API_KEY等を直書きしない）",

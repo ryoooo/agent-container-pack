@@ -1,6 +1,6 @@
 """Stack detection and configuration."""
 
-from agentpack.stack.detector import (
+from agent_container_pack.stack.detector import (
     AmbiguousStackError,
     NoStackDetectedError,
     StackError,

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from agentpack.manifest.schema import Manifest
+from agent_container_pack.manifest.schema import Manifest
 
 
 class ManifestError(Exception):

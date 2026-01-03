@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from agentpack.manifest import load_manifest
-from agentpack.validators.env import validate_env_vars, _extract_env_refs
+from agent_container_pack.manifest import load_manifest
+from agent_container_pack.validators.env import validate_env_vars, _extract_env_refs
 
 
 class TestEnvValidation:

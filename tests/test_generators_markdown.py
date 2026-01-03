@@ -4,8 +4,8 @@ from pathlib import Path
 
 from syrupy.assertion import SnapshotAssertion
 
-from agentpack.generators.markdown import generate_claude_md
-from agentpack.manifest import load_manifest
+from agent_container_pack.generators.markdown import generate_claude_md
+from agent_container_pack.manifest import load_manifest
 
 
 class TestMarkdownGenerator:

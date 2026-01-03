@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from agentpack.manifest import load_manifest
-from agentpack.manifest.schema import Manifest
-from agentpack.stack.detector import (
+from agent_container_pack.manifest import load_manifest
+from agent_container_pack.manifest.schema import Manifest
+from agent_container_pack.stack.detector import (
     AmbiguousStackError,
     detect_stack,
     NoStackDetectedError,

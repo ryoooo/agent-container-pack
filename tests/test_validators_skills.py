@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from agentpack.manifest import load_manifest
-from agentpack.validators.skills import validate_skills
+from agent_container_pack.manifest import load_manifest
+from agent_container_pack.validators.skills import validate_skills
 
 
 class TestSkillsValidation:

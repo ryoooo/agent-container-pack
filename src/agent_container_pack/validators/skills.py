@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from agentpack.manifest.schema import Manifest
+from agent_container_pack.manifest.schema import Manifest
 
 FRONTMATTER_PATTERN = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 NAME_PATTERN = re.compile(r"^name:\s*(.+)$", re.MULTILINE)

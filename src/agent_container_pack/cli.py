@@ -1,4 +1,4 @@
-"""Agentpack CLI."""
+"""Agent Container Pack CLI."""
 
 from pathlib import Path
 import sys
@@ -6,18 +6,18 @@ import sys
 import cyclopts
 import httpx
 
-from agentpack.devcontainer import update_firewall
-from agentpack.generators import (
+from agent_container_pack.devcontainer import update_firewall
+from agent_container_pack.generators import (
     generate_claude_md,
     generate_codex_config,
     generate_settings_json,
 )
-from agentpack.init import download_template, generate_skeleton, parse_template_source
-from agentpack.manifest import load_manifest, ManifestNotFoundError, ManifestParseError
-from agentpack.validators import validate_env_vars, validate_skills
+from agent_container_pack.init import download_template, generate_skeleton, parse_template_source
+from agent_container_pack.manifest import load_manifest, ManifestNotFoundError, ManifestParseError
+from agent_container_pack.validators import validate_env_vars, validate_skills
 
 app = cyclopts.App(
-    name="agentpack",
+    name="acp",
     help="Generate CLAUDE.md/AGENTS.md from agentpack.yml",
 )
 
@@ -112,7 +112,7 @@ def generate(
 def init(
     directory: Path = Path("."),
     *,
-    template: str = "github:ryoooo/agentpack-template-default",
+    template: str = "github:ryoooo/acp-template-default",
     stack: str = "python",
     force: bool = False,
 ) -> None:
@@ -164,7 +164,7 @@ def init(
     print()
     print("Next steps:")
     print("  1. Edit agentpack.yml (project name, commands, MCP servers)")
-    print("  2. Run: agentpack generate --write")
+    print("  2. Run: acp generate --write")
 
 
 if __name__ == "__main__":

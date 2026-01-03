@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from agentpack.manifest import Manifest
-from agentpack.manifest.loader import load_manifest, ManifestNotFoundError
+from agent_container_pack.manifest import Manifest
+from agent_container_pack.manifest.loader import load_manifest, ManifestNotFoundError
 
 
 class TestLoadManifest:
