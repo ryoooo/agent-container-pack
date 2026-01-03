@@ -92,6 +92,11 @@ def generate(
         print("  - AGENTS.md")
         print("  - .claude/settings.json")
         print("  - codex.config.toml")
+        print()
+        print("Start devcontainer:")
+        print("  VS Code:  Open folder → 'Reopen in Container'")
+        print("  CLI:      devcontainer up --workspace-folder .")
+        print("            devcontainer exec --workspace-folder . bash")
     else:
         # Dry run - show output
         print("=== CLAUDE.md ===")
@@ -156,6 +161,10 @@ def init(
     print(f"Initialized agentpack project in {directory}")
     print("  - .devcontainer/")
     print("  - agentpack.yml")
+    print()
+    print("Next steps:")
+    print("  1. Edit agentpack.yml (project name, commands, MCP servers)")
+    print("  2. Run: agentpack generate --write")
 
 
 if __name__ == "__main__":
